@@ -1,0 +1,42 @@
+<div class="card">
+    <h2>💰 BUDGET pour 5 PERSONNES (Antonin, Ethan, Lise, Noelie, Nalya)</h2>
+    <p style="font-size: 0.8rem; color: #636e72;">Part/4 calculée (Nalya invitée)</p>
+    <table>
+        <thead>
+            <tr><th>Poste</th><th>Prix U</th><th>Qté</th><th>Total</th><th>Part/4</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>🚗 Parking Poissy</td><td>7,00€</td><td>1</td><td>7,00€</td><td>1,75€</td></tr>
+            <tr><td>🚆 Ticket 1 (Aller)</td><td>2,55€</td><td>5</td><td>12,75€</td><td>3,19€</td></tr>
+            <tr><td>🚇 Ticket 2 (Triomphe)</td><td>2,55€</td><td>5</td><td>12,75€</td><td>3,19€</td></tr>
+            <tr><td>🚇 Ticket 3 (Eiffel)</td><td>2,55€</td><td>5</td><td>12,75€</td><td>3,19€</td></tr>
+            <tr><td>🚇 Ticket 4 (Lyon)</td><td>2,55€</td><td>5</td><td>12,75€</td><td>3,19€</td></tr>
+            <tr><td>🚆 Ticket 5 (Retour)</td><td>2,55€</td><td>5</td><td>12,75€</td><td>3,19€</td></tr>
+            <tr><td>🗼 Tour Eiffel</td><td>18,40€</td><td>5</td><td>92,00€</td><td>23,00€</td></tr>
+            <tr><td>🏛️ Arc de Triomphe</td><td>0,00€</td><td>5</td><td>0,00€</td><td>0,00€</td></tr>
+            <tr class="total-row">
+                <td colspan="3">💰 TOTAL GÉNÉRAL</td>
+                <td>162,50€</td>
+                <td>40,63€</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>💰 BUDGET pour 4 PERSONNES (Antnin, Ethan, Lise, Nalya)</h2>
+    <p style="font-size: 0.8rem; color: #636e72;">Part/3 calculée (Nalya invitée)</p>
+    <table>
+        <tr><th>Poste</th><th>Prix U</th><th>Qté</th><th>Total</th><th>Part/3</th></tr>
+        <tr><td>🚗 Parking Poissy</td><td>7,00€</td><td>1</td><td>7,00€</td><td>2,33€</td></tr>
+        <tr><td>🚆 Ticket 1 (Aller)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+        <tr><td>🚇 Ticket 2 (Triomphe)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+        <tr><td>🚇 Ticket 3 (Eiffel)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+        <tr><td>🚇 Ticket 4 (Lyon)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+        <tr><td>🚆 Ticket 5 (Retour)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+        <tr><td>🗼 Tour Eiffel</td><td>18,40€</td><td>4</td><td>73,60€</td><td>24,53€</td></tr>
+        <tr><td>🏛️ Arc de Triomphe</td><td>0,00€</td><td>4</td><td>0,00€</td><td>0,00€</td></tr>
+        <tr class="total-row"><td colspan="3">💰 TOTAL GÉNÉRAL</td><td>131,60€</td><td>43,86€</td></tr>
+    </table>
+</div>
+</div>

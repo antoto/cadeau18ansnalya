@@ -1,0 +1,124 @@
+<div class="card">
+            <h2>🕒 LE PLANNING</h2>
+            
+            <p><strong>MATIN : L'arrivée & L'Arc</strong></p>
+            <div class="step">
+                <span class="time">06h45</span>
+                <div class="step-content">Départ de Rives-en-Seine (Route : 1h45)</div>
+            </div>
+            <div id="etape1" class="step">
+                <span class="time">08h30</span>
+                <div class="step-content">Parking Indigo Poissy 🅿️ (6 rue du Bac)</div>
+            </div>
+            <div class="step">
+                <span class="time">08h57</span>
+                <div class="step-content">
+                    Départ RER A 🚆 (Trajet : 28 min) <span class="badge">x5 tickets</span><br>
+                    <small>Dir. : Marne-la-Vallée / Boissy-St-Léger</small>
+                </div>
+            </div>
+            <div class="step">
+                <span class="time">09h25</span>
+                <div class="step-content">Arrivée Charles de Gaulle - Étoile</div>
+            </div>
+            <div id="etape2" class="step">
+                <span class="time">09h35</span>
+                <div class="step-content">
+                    Arc de Triomphe (Sortie 1)
+                    <img src="Arc de tromphe.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <small>Gratuit avec CNI. Si trop de queue, photos en bas.</small>
+                </div>
+            </div>
+        
+            <p><strong>MIDI : LE GRAND BREAK (11h30 — 14h00)</strong></p>
+            <div class="step">
+                <span class="time">11h10</span>
+                <div class="step-content">Métro Ligne 6 🚇 (Dir. Nation) <span class="badge">x5 tickets</span><br>
+                <small>Charles de Gaulle - Étoile ➔ Trocadéro (5 min)</small></div>
+            </div>
+            <div class="step">
+                <span class="time">11h20</span>
+                <div class="step-content">Shooting Photo au Trocadéro</div>
+            </div>
+            <div class="step">
+                <span class="time">12h00</span>
+                <div class="step-content">Installation au Champ-de-Mars (10 min à pied)</div>
+            </div>
+            <div id="etape3" class="step">
+                <span class="time">12h00</span>
+                <div class="step-content">
+                    <strong>Pique-nique & Chill</strong>
+                    <img src="Champs de Mars Picnic.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <small>Repas, jeu de société, sieste...</small>
+                </div>
+            </div>
+        
+            <p><strong>APRÈS-MIDI : Ascension & Montmartre</strong></p>
+            <div class="step">
+                <span class="time">14h00</span>
+                <div class="step-content">
+                    TOUR EIFFEL 🗼 (Sommet - 18,40 €/pers)
+                    <img src="Tour Sommet.jpg" class="step-img crop-top" onclick="enlargeImg(this)">
+                </div>
+            </div>
+            <div class="step">
+                <span class="time">16h00</span>
+                <div class="step-content">Départ vers Montmartre 🚇 <span class="badge">x5 tickets</span><br>
+                <small>L6 (Bir-Hakeim ➔ Étoile) puis L2 (Étoile ➔ Anvers)</small></div>
+            </div>
+            <div id="etape4" class="step">
+                <span class="time">16h45</span>
+                <div class="step-content">
+                    Sacré-Cœur ⛪
+                    <img src="Sacré Coeur.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <small>Utilisation du funiculaire ?</small>
+                </div>
+            </div>
+            <div class="step">
+                <span class="time">17h30</span>
+                <div class="step-content">PAUSE GOÛTER MAISON (Square Louise Michel)</div>
+            </div>
+        
+            <p><strong>SOIR : Couleurs, Resto & Retour</strong></p>
+        
+        <div class="step">
+            <span class="time">18h00</span>
+            <div class="step-content">Liaison Rue Crémieux 🌈 <span class="badge">x5 tickets</span><br>
+            <small>L2 (Anvers ➔ Nation) puis RER A (Gare de Lyon)</small></div>
+        </div>
+
+        <div id="etape5" class="step">
+            <span class="time">18h30</span>
+            <div class="step-content">
+                Photos dans la rue colorée
+                <img src="Rue Crémieux.jpg" class="step-img" onclick="enlargeImg(this)">
+                <small><a href="https://maps.app.goo.gl/3fX3yJ8V2KzE6H8h7" target="_blank" style="color: #0f0;">📍 Voir sur Maps</a></small>
+            </div>
+        </div>
+
+        <div id="etape-resto" class="step" style="border-left-color: var(--pink);">
+            <span class="time">19h15</span>
+            <div class="step-content">
+                <strong>DÎNER QUARTIER BASTILLE / GARE DE LYON 🍕</strong><br>
+                <small>Balade vers le Port de l'Arsenal ou la Bastille.</small><br>
+                <div style="margin-top: 8px;">
+                    <a href="https://maps.app.goo.gl/uXv7s6eXGByY6zCj8" target="_blank" style="color: var(--pink); font-size: 0.8rem; text-decoration: none;">🔍 Explorer les restos (Google Maps)</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="etape6" class="step">
+            <span class="time">21h00</span>
+            <div class="step-content">RETOUR FINAL 🚆 <span class="badge">x5 tickets</span><br>
+            <small>RER A Gare de Lyon ➔ Poissy (26 min)</small></div>
+        </div>
+
+        <div class="step">
+            <span class="time">21h30</span>
+            <div class="step-content">Récupération voiture 🚗 (Route : 1h50)</div>
+        </div>
+
+        <div class="step">
+            <span class="time">23h20</span>
+            <div class="step-content">Arrivée à Rives-en-Seine 🏠 (Dodo bien mérité !)</div>
+        </div>

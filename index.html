@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadbook 18 ans Nalya</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --pink: #ff7eb9;
+            --purple: #764ba2;
+            --dark: #2d3436;
+            --white: #ffffff;
+            --gradient: linear-gradient(135deg, #ff7eb9 0%, #764ba2 100%);
+        }
+
+        /* Protection par mot de passe */
+        #lock-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--gradient); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999;
+            color: white; transition: opacity 0.5s ease;
+        }
+        #lock-screen input { padding: 12px; border-radius: 10px; border: none; margin-top: 15px; width: 200px; text-align: center; font-size: 1rem; }
+        #lock-screen button { margin-top: 10px; padding: 10px 20px; border-radius: 10px; border: none; background: var(--purple); color: white; cursor: pointer; font-weight: bold; }
+
+        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; color: var(--dark); margin: 0; padding: 0; line-height: 1.5; scroll-behavior: smooth; }
+        .hero { background: var(--gradient); color: var(--white); padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
+        .hero h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
+        .container { max-width: 600px; margin: -20px auto 40px; padding: 0 15px; }
+        .card { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+        h2 { font-size: 1.2rem; color: var(--purple); border-bottom: 2px solid #f1f2f6; padding-bottom: 8px; margin-top: 0; text-transform: uppercase; }
+
+        /* Carte et Marqueurs */
+        #map { height: 380px; width: 100%; border-radius: 15px; margin: 15px 0; border: 2px solid white; z-index: 1; }
+        .map-label { 
+            background: var(--pink); color: white; border-radius: 50%; 
+            width: 32px; height: 32px; text-align: center; 
+            font-size: 16px; font-weight: bold; line-height: 32px; 
+            border: 2.5px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.3); 
+        }
+        .popup-link { color: var(--purple); text-decoration: none; font-weight: bold; display: block; margin-top: 5px; }
+
+        /* Planning */
+        .time { font-weight: 700; color: var(--pink); min-width: 60px; display: inline-block; }
+        .step { margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px; scroll-margin-top: 30px; }
+        .step-content { flex: 1; font-size: 0.9rem; }
+        .step-img { 
+            width: 100%; height: 180px; object-fit: cover; border-radius: 15px; 
+            margin: 10px 0; border: 1px solid #eee; cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+        .step-img:hover { transform: scale(1.02); }
+        .crop-top { object-position: top; }
+        .badge { background: #e3f2fd; color: #1976d2; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; }
+
+        /* Checklist */
+        .checklist { list-style: none; padding: 0; margin: 10px 0; }
+        .checklist-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #f1f2f6; cursor: pointer; font-size: 0.9rem; }
+        .checklist-item input { width: 18px; height: 18px; margin-right: 12px; accent-color: var(--pink); }
+        .checklist-item input:checked + span { text-decoration: line-through; color: #b2bec3; }
+
+        /* Budget Table */
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+        th { text-align: left; padding: 8px; border-bottom: 2px solid #eee; }
+        td { padding: 8px; border-bottom: 1px solid #eee; }
+        .total-row { background: #fff5f9; font-weight: 700; }
+
+        /* Lightbox */
+        #imageModal {
+            display:none; position:fixed; z-index:10001; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.9); align-items:center; justify-content:center; 
+            cursor:zoom-out; backdrop-filter: blur(5px);
+        }
+        #modalImg { max-width:95%; max-height:90%; border-radius:10px; }
+
+        /* Liens utiles */
+        .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .link-item { 
+            background: #f1f2f6; padding: 12px; border-radius: 12px; text-decoration: none; 
+            color: var(--dark); font-size: 0.8rem; display: flex; align-items: center; gap: 8px;
+            border: 1px solid #ddd;
+        }
+
+        /* Style des boutons Google Maps */
+        .btn-maps-action {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #4285F4; color: white !important;
+            padding: 10px 18px; border-radius: 50px;
+            text-decoration: none; font-size: 0.85rem; font-weight: 600;
+            margin-top: 10px; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+            transition: 0.2s;
+        }
+        .btn-maps-action:active { transform: scale(0.95); }
+    </style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Roadbook 18">
+    <link rel="apple-touch-icon" href="https://fav.farm/🎂">
+    <link rel="icon" href="https://fav.farm/🎂">
+</head>
+
+<body>
+
+    <div id="lock-screen">
+        <i class="fas fa-lock fa-3x"></i>
+        <h2>Accès Roadbook</h2>
+        <input type="password" id="passInput" placeholder="Mot de passe...">
+        <button onclick="checkPass()">Valider</button>
+    </div>
+
+    <div id="imageModal" onclick="this.style.display='none'">
+        <img id="modalImg">
+    </div>
+
+    <div class="hero">
+        <h1>🎂 LES 18 ANS DE NALYA</h1>
+        <p>Mardi 28 Juillet 2026 | Roadbook</p>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>📍 LA CARTE DU JOUR</h2>
+            <div id="map"></div>
+            <div class="links-grid">
+                <h2>LES LIENS UTILES</h2><br>
+                <a href="https://maps.google.com/maps/contrib/106521208873885044851" target="_blank" class="link-item"><i class="fas fa-parking"></i> GPS Parking</a>
+                <a href="https://www.transilien.com/fr/itineraire" target="_blank" class="link-item"><i class="fas fa-train"></i> RER A</a>
+                <a href="https://antoto.github.io/enigmes18ansnalya/" target="_blank" class="link-item"><i class="fas fa-user-secret"></i> Les énigmes (avec intro)</a>
+                <a href="https://antoto.github.io/enigmes18ansnalya/mission.html" target="_blank" class="link-item"><i class="fas fa-user-secret"></i> Les énigmes (sans intro)</a>
+                <a href="https://antoto.github.io/comptes18ansnalya/" target="_blank" class="link-item" style="grid-column: span 2; background: #fff5f9; border: 1px solid var(--pink);">
+                    <i class="fas fa-wallet" style="color: var(--pink);"></i> <b>COMPTES DÉPENSES 💰</b>
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>✅ A NE PAS OUBLIER</h2>
+            <div class="checklist">
+                <label class="checklist-item"><input type="checkbox"> <span>🪪 Cartes d'identité</span></label>
+                <label class="checklist-item"><input type="checkbox"> <span>🎟️ Billets Tour Eiffel</span></label>
+                <label class="checklist-item"><input type="checkbox"> <span>🥪 Pique-nique & Boissons</span></label>
+                <label class="checklist-item"><input type="checkbox"> <span>🔋 Batteries externes</span></label>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🕒 LE PLANNING</h2>
+            
+            <p><strong>MATIN : L'arrivée & L'Arc</strong></p>
+            <div class="step">
+                <span class="time">06h45</span>
+                <div class="step-content">Départ de Rives-en-Seine (Route : 1h45)</div>
+            </div>
+            <div id="etape1" class="step">
+                <span class="time">08h30</span>
+                <div class="step-content">Parking Indigo Poissy 🅿️ (6 rue du Bac)</div>
+            </div>
+            <div class="step">
+                <span class="time">08h57</span>
+                <div class="step-content">
+                    Départ RER A 🚆 (Trajet : 28 min) <span class="badge">x5 tickets</span><br>
+                    <small>Dir. : Marne-la-Vallée / Boissy-St-Léger</small>
+                </div>
+            </div>
+            <div class="step">
+                <span class="time">09h25</span>
+                <div class="step-content">Arrivée Charles de Gaulle - Étoile</div>
+            </div>
+            <div id="etape2" class="step">
+                <span class="time">09h35</span>
+                <div class="step-content">
+                    Arc de Triomphe (Sortie 1)
+                    <img src="Arc de tromphe.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <small>Gratuit avec CNI. Si trop de queue, photos en bas.</small>
+                </div>
+            </div>
+        
+            <p><strong>MIDI : LE GRAND BREAK (11h30 — 14h00)</strong></p>
+            <div class="step">
+                <span class="time">11h10</span>
+                <div class="step-content">Métro Ligne 6 🚇 (Dir. Nation) <span class="badge">x5 tickets</span><br>
+                <small>Charles de Gaulle - Étoile ➔ Trocadéro (5 min)</small></div>
+            </div>
+            <div class="step">
+                <span class="time">11h20</span>
+                <div class="step-content">Shooting Photo au Trocadéro</div>
+            </div>
+            <div class="step">
+                <span class="time">12h00</span>
+                <div class="step-content">Installation au Champ-de-Mars (10 min à pied)</div>
+            </div>
+            <div id="etape3" class="step">
+                <span class="time">12h00</span>
+                <div class="step-content">
+                    <strong>Pique-nique & Chill</strong>
+                    <img src="Champs de Mars Picnic.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <small>Repas, jeu de société, sieste...</small>
+                </div>
+            </div>
+        
+            <p><strong>APRÈS-MIDI : Ascension & Montmartre</strong></p>
+            <div class="step">
+                <span class="time">14h00</span>
+                <div class="step-content">
+                    TOUR EIFFEL 🗼 (Sommet - 18,40 €/pers)
+                    <img src="Tour Sommet.jpg" class="step-img crop-top" onclick="enlargeImg(this)">
+                </div>
+            </div>
+            <div class="step">
+                <span class="time">16h00</span>
+                <div class="step-content">Départ vers Montmartre 🚇 <span class="badge">x5 tickets</span><br>
+                <small>L6 (Bir-Hakeim ➔ Étoile) puis L2 (Étoile ➔ Anvers)</small></div>
+            </div>
+            <div id="etape4" class="step">
+                <span class="time">16h45</span>
+                <div class="step-content">
+                    Sacré-Cœur ⛪
+                    <img src="Sacré Coeur.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <small>Utilisation du funiculaire ?</small>
+                </div>
+            </div>
+            <div class="step">
+                <span class="time">17h30</span>
+                <div class="step-content">PAUSE GOÛTER MAISON (Square Louise Michel)</div>
+            </div>
+        
+            <p><strong>SOIR : Couleurs, Resto & Retour</strong></p>
+        
+            <div class="step">
+                <span class="time">18h00</span>
+                <div class="step-content">Liaison Rue Crémieux 🌈 <span class="badge">x5 tickets</span><br>
+                <small>L2 (Anvers ➔ Nation) puis RER A (Gare de Lyon)</small></div>
+            </div>
+        
+            <div id="etape5" class="step">
+                <span class="time">18h30</span>
+                <div class="step-content">
+                    Photos dans la rue colorée
+                    <img src="Rue Crémieux.jpg" class="step-img" onclick="enlargeImg(this)">
+                </div>
+            </div>
+        
+            <div id="etape-resto" class="step" style="border-left: 3px solid var(--pink); padding-left: 10px;">
+                <span class="time">19h15</span>
+                <div class="step-content">
+                    <strong>DÎNER (Gare de Lyon / Bastille) 🍕</strong><br>
+                    <small>Nos pépites trouvées pour finir la journée :</small><br>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+                        <a href="METS_TON_LIEN_1_ICI" target="_blank" class="btn-maps-action">
+                            <i class="fas fa-utensils"></i> Resto 1
+                        </a>
+                        <a href="METS_TON_LIEN_2_ICI" target="_blank" class="btn-maps-action" style="background: var(--gradient);">
+                            <i class="fas fa-utensils"></i> Resto 2
+                        </a>
+                    </div>
+                </div>
+            </div>
+        
+            <div id="etape6" class="step">
+                <span class="time">21h00</span>
+                <div class="step-content">RETOUR FINAL 🚆 <span class="badge">x5 tickets</span><br>
+                <small>RER A Gare de Lyon ➔ Poissy (26 min)</small></div>
+            </div>
+            <div class="step">
+                <span class="time">21h30</span>
+                <div class="step-content">Récupération voiture 🚗</div>
+            </div>
+            <div class="step">
+                <span class="time">23h20</span>
+                <div class="step-content">Arrivée à Rives-en-Seine 🏠</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💰 BUDGET pour 4 PERSONNES (Antonin, Ethan, Lise, Nalya)</h2>
+            <p style="font-size: 0.8rem; color: #636e72;">Part/3 calculée (Nalya invitée)</p>
+            <table>
+                <tr><th>Poste</th><th>Prix U</th><th>Qté</th><th>Total</th><th>Part/3</th></tr>
+                <tr><td>🚗 Parking Poissy</td><td>7,00€</td><td>1</td><td>7,00€</td><td>2,33€</td></tr>
+                <tr><td>🚆 Ticket 1 (Aller)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+                <tr><td>🚇 Ticket 2 (Triomphe)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+                <tr><td>🚇 Ticket 3 (Eiffel)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+                <tr><td>🚇 Ticket 4 (Lyon)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+                <tr><td>🚆 Ticket 5 (Retour)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
+                <tr><td>🗼 Tour Eiffel</td><td>18,40€</td><td>4</td><td>73,60€</td><td>24,53€</td></tr>
+                <tr><td>🏛️ Arc de Triomphe</td><td>0,00€</td><td>4</td><td>0,00€</td><td>0,00€</td></tr>
+                <tr class="total-row"><td colspan="3">💰 TOTAL GÉNÉRAL</td><td>131,60€</td><td>43,86€</td></tr>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        function checkPass() {
+            if (document.getElementById('passInput').value.toUpperCase() === "NALYA18") {
+                document.getElementById('lock-screen').style.opacity = "0";
+                setTimeout(() => { document.getElementById('lock-screen').style.display = "none"; initMap(); }, 500);
+            } else { alert("Code incorrect !"); }
+        }
+
+        function initMap() {
+            const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+            const map = L.map('map', { layers: [satellite] }).setView([48.87, 2.30], 11);
+
+            const points = [
+                {n: 1, name: "Parking Poissy", coords: [48.933918, 2.042372]},
+                {n: 2, name: "Arc de Triomphe", coords: [48.8738, 2.2950]},
+                {n: 3, name: "Tour Eiffel", coords: [48.8584, 2.2945]},
+                {n: 4, name: "Sacré-Cœur", coords: [48.8867, 2.3431]},
+                {n: 5, name: "Rue Crémieux", coords: [48.8471, 2.3708]},
+                {n: 6, name: "Retour final", coords: [48.9338, 2.0423]}
+            ];
+
+            const traceCoords = points.map(p => p.coords);
+            L.polyline(traceCoords, {color: '#ff7eb9', weight: 4, opacity: 0.8, dashArray: '8, 12'}).addTo(map);
+
+            points.forEach(p => {
+                const customIcon = L.divIcon({ className: 'map-label', html: p.n, iconSize: [32, 32] });
+                L.marker(p.coords, {icon: customIcon}).addTo(map)
+                .bindPopup(`<b>${p.name}</b><br><a href="#etape${p.n}" class="popup-link">👉 Voir l'étape</a>`);
+            });
+
+            map.fitBounds(L.polyline(traceCoords).getBounds(), {padding: [40, 40]});
+        }
+
+        function enlargeImg(el) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modal.style.display = "flex";
+            modalImg.src = el.src;
+        }
+    </script>
+</body>
+</html>
