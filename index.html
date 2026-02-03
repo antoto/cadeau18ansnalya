@@ -601,88 +601,148 @@
             </div>
         </div>
 
-        <div class="card">
-            <h2>💰 BUDGET pour 4 PERSONNES (Antonin, Ethan, Lise, Nalya)</h2>
-            <p style="font-size: 0.8rem; color: #636e72;">Part/3 calculée (Nalya invitée)</p>
-            <table>
-                <tr>
-                    <th>Poste</th>
-                    <th>Prix Unité</th>
-                    <th>Qté</th>
-                    <th>Total</th>
-                    <th>Part/3</th>
-                </tr>
-                <tr>
-                    <td>🚗 Parking Poissy</td>
-                    <td>7,00€</td>
-                    <td>1</td>
-                    <td>7,00€</td>
-                    <td>2,33€</td>
-                </tr>
-                <tr>
-                    <td>🚆 Ticket 1 (Aller)</td>
-                    <td>2,55€</td>
-                    <td>4</td>
-                    <td>10,20€</td>
-                    <td>3,40€</td>
-                </tr>
-                <tr>
-                    <td>🚇 Ticket 2 (Triomphe)</td>
-                    <td>2,55€</td>
-                    <td>4</td>
-                    <td>10,20€</td>
-                    <td>3,40€</td>
-                </tr>
-                <tr>
-                    <td>🚇 Ticket 3 (Eiffel)</td>
-                    <td>2,55€</td>
-                    <td>4</td>
-                    <td>10,20€</td>
-                    <td>3,40€</td>
-                </tr>
-                <tr>
-                    <td>🚇 Ticket 4 (Lyon)</td>
-                    <td>2,55€</td>
-                    <td>4</td>
-                    <td>10,20€</td>
-                    <td>3,40€</td>
-                </tr>
-                <tr>
-                    <td>🚆 Ticket 5 (Retour)</td>
-                    <td>2,55€</td>
-                    <td>4</td>
-                    <td>10,20€</td>
-                    <td>3,40€</td>
-                </tr>
-                <tr>
-                    <td>🗼 Tour Eiffel</td>
-                    <td>18,40€</td>
-                    <td>4</td>
-                    <td>73,60€</td>
-                    <td>24,53€</td>
-                </tr>
-                <tr>
-                    <td>🏛️ Arc de Triomphe</td>
-                    <td>0,00€</td>
-                    <td>4</td>
-                    <td>0,00€</td>
-                    <td>0,00€</td>
-                </tr>
-                <tr style="color: var(--purple); font-weight: 600;">
-                    <td>🍕 Resto (Estimation)</td>
-                    <td>15,00€</td>
-                    <td>4</td>
-                    <td>60,00€</td>
-                    <td>20,00€</td>
-                </tr>
+        <div class="card"
+            style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); font-family: sans-serif;">
+            <h2 style="margin-top: 0; color: #2d3436;">💰 BUDGET INTERACTIF</h2>
+            <p style="font-size: 0.8rem; color: #636e72; margin-bottom: 15px;">Part/3 calculée (Nalya invitée) •
+                Modifiez, ajoutez ou supprimez des lignes.</p>
 
-                <tr class="total-row">
-                    <td colspan="3">💰 TOTAL GÉNÉRAL</td>
-                    <td>191,60€</td>
-                    <td>63,86€</td>
-                </tr>
-            </table>
+            <div style="overflow-x: auto;">
+                <table id="budgetTable" style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 2px solid #eee; color: #b2bec3; font-size: 0.8rem;">
+                            <th style="padding: 10px;">POSTE</th>
+                            <th style="padding: 10px;">PRIX UNITÉ</th>
+                            <th style="padding: 10px;">QTÉ</th>
+                            <th style="padding: 10px;">TOTAL</th>
+                            <th style="padding: 10px;">PART/3</th>
+                            <th style="padding: 10px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="budgetBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="addRow()"
+                    style="background: #f1f2f6; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: 600; color: #2d3436;">+
+                    Ajouter une ligne</button>
+                <button onclick="saveData()"
+                    style="background: #00b894; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: 600; color: white;">💾
+                    Sauvegarder</button>
+                <button onclick="window.print()"
+                    style="background: #0984e3; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: 600; color: white;">🖨️
+                    Imprimer / PDF</button>
+            </div>
+
+            <div
+                style="margin-top: 20px; background: #6c5ce7; border-radius: 15px; padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">TOTAL GÉNÉRAL</div>
+                    <div id="grandTotal" style="font-size: 1.4rem; font-weight: bold;">0.00€</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.8rem; opacity: 0.8;">PART PAR PERSONNE (x3)</div>
+                    <div id="partTotal" style="font-size: 1.4rem; font-weight: bold; color: #fab1a0;">0.00€</div>
+                </div>
+            </div>
         </div>
+
+        <script>
+            // Tes valeurs initiales obligatoires
+            const initialData = [
+                ["🚗 Parking Poissy", 7.00, 1],
+                ["🚆 Ticket 1 (Aller)", 2.55, 4],
+                ["🚇 Ticket 2 (Triomphe)", 2.55, 4],
+                ["🚇 Ticket 3 (Eiffel)", 2.55, 4],
+                ["🚇 Ticket 4 (Lyon)", 2.55, 4],
+                ["🚆 Ticket 5 (Retour)", 2.55, 4],
+                ["🗼 Tour Eiffel", 18.40, 4],
+                ["🏛️ Arc de Triomphe", 0.00, 4],
+                ["🍕 Resto (Estimation)", 15.00, 4]
+            ];
+
+            function init() {
+                const saved = localStorage.getItem('monBudgetParis');
+                if (saved) {
+                    JSON.parse(saved).forEach(d => addRow(d[0], d[1], d[2]));
+                } else {
+                    initialData.forEach(d => addRow(d[0], d[1], d[2]));
+                }
+                updateCalculations();
+            }
+
+            function addRow(label = "", price = 0, qty = 1) {
+                const tbody = document.getElementById("budgetBody");
+                const tr = document.createElement("tr");
+                tr.style.borderBottom = "1px solid #f1f2f6";
+
+                tr.innerHTML = `
+                <td style="padding: 5px;"><input type="text" value="${label}" class="label-in" style="width:100%; border:none; padding:8px; outline:none;"></td>
+                <td style="padding: 5px;"><input type="number" value="${price}" class="price-in" step="0.05" style="width:70px; border:1px solid #eee; padding:5px; border-radius:5px;"></td>
+                <td style="padding: 5px;"><input type="number" value="${qty}" class="qty-in" style="width:50px; border:1px solid #eee; padding:5px; border-radius:5px;"></td>
+                <td class="row-total" style="padding: 10px; font-weight: 600; color: #2d3436;">0.00€</td>
+                <td class="row-part" style="padding: 10px; color: #636e72;">0.00€</td>
+                <td style="padding: 5px;"><button onclick="this.parentElement.parentElement.remove(); updateCalculations();" style="background:none; border:none; color:#ff7675; cursor:pointer; font-size:1.2rem;">&times;</button></td>
+            `;
+
+                tbody.appendChild(tr);
+                tr.querySelectorAll("input").forEach(i => i.addEventListener("input", updateCalculations));
+                updateCalculations();
+            }
+
+            function updateCalculations() {
+                let totalGlobal = 0;
+                document.querySelectorAll("#budgetBody tr").forEach(row => {
+                    const p = parseFloat(row.querySelector(".price-in").value) || 0;
+                    const q = parseInt(row.querySelector(".qty-in").value) || 0;
+                    const totalLine = p * q;
+                    const partLine = totalLine / 3;
+
+                    row.querySelector(".row-total").innerText = totalLine.toFixed(2) + "€";
+                    row.querySelector(".row-part").innerText = partLine.toFixed(2) + "€";
+                    totalGlobal += totalLine;
+                });
+
+                document.getElementById("grandTotal").innerText = totalGlobal.toFixed(2) + "€";
+                document.getElementById("partTotal").innerText = (totalGlobal / 3).toFixed(2) + "€";
+            }
+
+            function saveData() {
+                const data = [];
+                document.querySelectorAll("#budgetBody tr").forEach(row => {
+                    data.push([
+                        row.querySelector(".label-in").value,
+                        row.querySelector(".price-in").value,
+                        row.querySelector(".qty-in").value
+                    ]);
+                });
+                localStorage.setItem('monBudgetParis', JSON.stringify(data));
+                alert("Budget sauvegardé sur cet appareil !");
+            }
+
+            window.onload = init;
+        </script>
+
+        <style>
+            @media print {
+
+                button,
+                p {
+                    display: none !important;
+                }
+
+                .card {
+                    box-shadow: none !important;
+                    border: 1px solid #ccc !important;
+                }
+
+                input {
+                    border: none !important;
+                }
+            }
+        </style>
 
     </div>
 
