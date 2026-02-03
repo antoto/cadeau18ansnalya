@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roadbook</title>
-    
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Roadbook 18">
@@ -32,82 +32,286 @@
 
         /* Protection par mot de passe */
         #lock-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--gradient); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999;
-            color: white; transition: opacity 0.5s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            transition: opacity 0.5s ease;
         }
-        #lock-screen input { padding: 12px; border-radius: 10px; border: none; margin-top: 15px; width: 200px; text-align: center; font-size: 1rem; }
-        #lock-screen button { margin-top: 10px; padding: 10px 20px; border-radius: 10px; border: none; background: var(--purple); color: white; cursor: pointer; font-weight: bold; }
 
-        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; color: var(--dark); margin: 0; padding: 0; line-height: 1.5; scroll-behavior: smooth; }
-        .hero { background: var(--gradient); color: var(--white); padding: 40px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
-        .hero h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
-        .container { max-width: 600px; margin: -20px auto 40px; padding: 0 15px; }
-        .card { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
-        h2 { font-size: 1.2rem; color: var(--purple); border-bottom: 2px solid #f1f2f6; padding-bottom: 8px; margin-top: 0; text-transform: uppercase; }
+        #lock-screen input {
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 15px;
+            width: 200px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        #lock-screen button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            background: var(--purple);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        .hero {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: -20px auto 40px;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: var(--purple);
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 8px;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
 
         /* Carte et Marqueurs */
-        #map { height: 380px; width: 100%; border-radius: 15px; margin: 15px 0; border: 2px solid white; z-index: 1; }
-        .map-label { 
-            background: var(--pink); color: white; border-radius: 50%; 
-            width: 32px; height: 32px; text-align: center; 
-            font-size: 16px; font-weight: bold; line-height: 32px; 
-            border: 2.5px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.3); 
+        #map {
+            height: 380px;
+            width: 100%;
+            border-radius: 15px;
+            margin: 15px 0;
+            border: 2px solid white;
+            z-index: 1;
         }
-        .popup-link { color: var(--purple); text-decoration: none; font-weight: bold; display: block; margin-top: 5px; }
+
+        .map-label {
+            background: var(--pink);
+            color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 32px;
+            border: 2.5px solid white;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .popup-link {
+            color: var(--purple);
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
 
         /* Planning */
-        .time { font-weight: 700; color: var(--pink); min-width: 60px; display: inline-block; }
-        .step { margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px; scroll-margin-top: 30px; }
-        .step-content { flex: 1; font-size: 0.9rem; }
-        .step-img { 
-            width: 100%; height: 180px; object-fit: cover; border-radius: 15px; 
-            margin: 10px 0; border: 1px solid #eee; cursor: zoom-in;
+        .time {
+            font-weight: 700;
+            color: var(--pink);
+            min-width: 60px;
+            display: inline-block;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            scroll-margin-top: 30px;
+        }
+
+        .step-content {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .step-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 10px 0;
+            border: 1px solid #eee;
+            cursor: zoom-in;
             transition: transform 0.3s ease;
         }
-        .step-img:hover { transform: scale(1.02); }
-        .crop-top { object-position: top; }
-        .badge { background: #e3f2fd; color: #1976d2; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; }
+
+        .step-img:hover {
+            transform: scale(1.02);
+        }
+
+        .crop-top {
+            object-position: top;
+        }
+
+        .badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
 
         /* Checklist */
-        .checklist { list-style: none; padding: 0; margin: 10px 0; }
-        .checklist-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #f1f2f6; cursor: pointer; font-size: 0.9rem; }
-        .checklist-item input { width: 18px; height: 18px; margin-right: 12px; accent-color: var(--pink); }
-        .checklist-item input:checked + span { text-decoration: line-through; color: #b2bec3; }
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #f1f2f6;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .checklist-item input {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            accent-color: var(--pink);
+        }
+
+        .checklist-item input:checked+span {
+            text-decoration: line-through;
+            color: #b2bec3;
+        }
 
         /* Budget Table */
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
-        th { text-align: left; padding: 8px; border-bottom: 2px solid #eee; }
-        td { padding: 8px; border-bottom: 1px solid #eee; }
-        .total-row { background: #fff5f9; font-weight: 700; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 2px solid #eee;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-row {
+            background: #fff5f9;
+            font-weight: 700;
+        }
 
         /* Lightbox */
         #imageModal {
-            display:none; position:fixed; z-index:10001; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.9); align-items:center; justify-content:center; 
-            cursor:zoom-out; backdrop-filter: blur(5px);
+            display: none;
+            position: fixed;
+            z-index: 10001;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            backdrop-filter: blur(5px);
         }
-        #modalImg { max-width:95%; max-height:90%; border-radius:10px; }
+
+        #modalImg {
+            max-width: 95%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
 
         /* Liens utiles */
-        .links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .link-item { 
-            background: #f1f2f6; padding: 12px; border-radius: 12px; text-decoration: none; 
-            color: var(--dark); font-size: 0.8rem; display: flex; align-items: center; gap: 8px;
+        .links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .link-item {
+            background: #f1f2f6;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             border: 1px solid #ddd;
         }
 
         /* Style des boutons Google Maps */
         .btn-maps-action {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #4285F4; color: white !important;
-            padding: 10px 18px; border-radius: 50px;
-            text-decoration: none; font-size: 0.85rem; font-weight: 600;
-            margin-top: 10px; box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #4285F4;
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
             transition: 0.2s;
         }
-        .btn-maps-action:active { transform: scale(0.95); }
+
+        .btn-maps-action:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 
@@ -134,14 +338,19 @@
         <div class="card">
             <h2>📍 LA CARTE DU JOUR</h2>
             <div id="map"></div>
-            
+
             <h2 style="margin-top: 20px;">🔗 LES LIENS UTILES</h2>
             <div class="links-grid">
-                <a href="https://www.google.com/maps" target="_blank" class="link-item"><i class="fas fa-parking"></i> GPS Parking</a>
-                <a href="https://www.transilien.com/fr/itineraire" target="_blank" class="link-item"><i class="fas fa-train"></i> RER A</a>
-                <a href="https://antoto.github.io/enigmes18ansnalya/" target="_blank" class="link-item"><i class="fas fa-user-secret"></i> Les énigmes (avec intro)</a>
-                <a href="https://antoto.github.io/enigmes18ansnalya/mission.html" target="_blank" class="link-item"><i class="fas fa-user-secret"></i> Les énigmes (sans intro)</a>
-                <a href="https://antoto.github.io/comptes18ansnalya/" target="_blank" class="link-item" style="grid-column: span 2; background: #fff5f9; border: 1px solid var(--pink);">
+                <a href="https://www.google.com/maps" target="_blank" class="link-item"><i class="fas fa-parking"></i>
+                    GPS Parking</a>
+                <a href="https://www.transilien.com/fr/itineraire" target="_blank" class="link-item"><i
+                        class="fas fa-train"></i> RER A</a>
+                <a href="https://antoto.github.io/enigmes18ansnalya/" target="_blank" class="link-item"><i
+                        class="fas fa-user-secret"></i> Les énigmes (avec intro)</a>
+                <a href="https://antoto.github.io/enigmes18ansnalya/mission.html" target="_blank" class="link-item"><i
+                        class="fas fa-user-secret"></i> Les énigmes (sans intro)</a>
+                <a href="https://antoto.github.io/comptes18ansnalya/" target="_blank" class="link-item"
+                    style="grid-column: span 2; background: #fff5f9; border: 1px solid var(--pink);">
                     <i class="fas fa-wallet" style="color: var(--pink);"></i> <b>COMPTES DÉPENSES 💰</b>
                 </a>
             </div>
@@ -159,7 +368,7 @@
 
         <div class="card">
             <h2>🕒 LE PLANNING</h2>
-            
+
             <p><strong>MATIN : L'arrivée & L'Arc</strong></p>
             <div class="step">
                 <span class="time">06h45</span>
@@ -188,12 +397,13 @@
                     <small>Gratuit avec CNI. Si trop de queue, photos en bas.</small>
                 </div>
             </div>
-        
+
             <p><strong>MIDI : LE GRAND BREAK (11h30 — 14h00)</strong></p>
             <div class="step">
                 <span class="time">11h10</span>
                 <div class="step-content">Métro Ligne 6 🚇 (Dir. Nation) <span class="badge">x5 tickets</span><br>
-                <small>Charles de Gaulle - Étoile ➔ Trocadéro (5 min)</small></div>
+                    <small>Charles de Gaulle - Étoile ➔ Trocadéro (5 min)</small>
+                </div>
             </div>
             <div class="step">
                 <span class="time">11h20</span>
@@ -211,7 +421,7 @@
                     <small>Repas, jeu de société, sieste...</small>
                 </div>
             </div>
-        
+
             <p><strong>APRÈS-MIDI : Ascension & Montmartre</strong></p>
             <div class="step">
                 <span class="time">14h00</span>
@@ -223,13 +433,14 @@
             <div class="step">
                 <span class="time">16h00</span>
                 <div class="step-content">Départ vers Montmartre 🚇 <span class="badge">x5 tickets</span><br>
-                <small>L6 (Bir-Hakeim ➔ Étoile) puis L2 (Étoile ➔ Anvers)</small></div>
+                    <small>L6 (Bir-Hakeim ➔ Étoile) puis L2 (Étoile ➔ Anvers)</small>
+                </div>
             </div>
             <div id="etape4" class="step">
                 <span class="time">16h45</span>
                 <div class="step-content">
                     Sacré-Cœur ⛪
-                    <img src="Sacré Coeur.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <img src="Sacré Coeur.jpg" class="step-img" onclick="enlargeImg(this)">
                     <small>Utilisation du funiculaire ?</small>
                 </div>
             </div>
@@ -237,72 +448,94 @@
                 <span class="time">17h30</span>
                 <div class="step-content">PAUSE GOÛTER MAISON (Square Louise Michel)</div>
             </div>
-        
+
             <p><strong>SOIR : Couleurs, Resto & Retour</strong></p>
-        
+
             <div class="step">
                 <span class="time">18h00</span>
                 <div class="step-content">Liaison Rue Crémieux 🌈 <span class="badge">x5 tickets</span><br>
-                <small>L2 (Anvers ➔ Nation) puis RER A (Gare de Lyon)</small></div>
+                    <small>L2 (Anvers ➔ Nation) puis RER A (Gare de Lyon)</small>
+                </div>
             </div>
-        
+
             <div id="etape5" class="step">
                 <span class="time">18h30</span>
                 <div class="step-content">
                     Photos dans la rue colorée
-                    <img src="Rue Crémieux.jpg" class="step-img" onclick="enlargeImg(this)">
+                    <img src="Rue Crémieux.jpg" class="step-img" onclick="enlargeImg(this)">
                 </div>
             </div>
-        
+
             <div id="etape-resto" class="step" style="border-left: 3px solid var(--pink); padding-left: 10px;">
                 <span class="time">19h15</span>
                 <div class="step-content">
                     <strong>DÎNER (Gare de Lyon / Bastille) 🍕</strong><br>
                     <small>Nos pépites trouvées pour finir la journée :</small><br>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
-                        <a href="https://www.google.com/maps/search/Dépôt+Légal+Gare+de+Lyon" target="_blank" style="text-decoration: none;">
-                            <div style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
+                        <a href="https://www.google.com/maps/search/Dépôt+Légal+Gare+de+Lyon" target="_blank"
+                            style="text-decoration: none;">
+                            <div
+                                style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
                                 <div style="font-size: 1.5rem; margin-bottom: 5px;">🥐</div>
-                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">Dépôt Légal</div>
+                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">Dépôt Légal
+                                </div>
                                 <div style="font-size: 0.7rem; color: #636e72;">Cuisine Moderne • 4,3 ⭐</div>
-                                <div style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--pink); padding: 3px 10px; border-radius: 20px;">Voir GPS</div>
+                                <div
+                                    style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--pink); padding: 3px 10px; border-radius: 20px;">
+                                    Voir GPS</div>
                             </div>
                         </a>
-                    
-                        <a href="https://www.google.com/maps/search/Afri+Call+Food+Gare+de+Lyon" target="_blank" style="text-decoration: none;">
-                            <div style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
+
+                        <a href="https://www.google.com/maps/search/Afri+Call+Food+Gare+de+Lyon" target="_blank"
+                            style="text-decoration: none;">
+                            <div
+                                style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
                                 <div style="font-size: 1.5rem; margin-bottom: 5px;">🍗</div>
-                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">Afri Call Food</div>
+                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">Afri Call Food
+                                </div>
                                 <div style="font-size: 0.7rem; color: #636e72;">Africain • 4,7 ⭐</div>
-                                <div style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--purple); padding: 3px 10px; border-radius: 20px;">Voir GPS</div>
+                                <div
+                                    style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--purple); padding: 3px 10px; border-radius: 20px;">
+                                    Voir GPS</div>
                             </div>
                         </a>
-                    
-                        <a href="https://www.google.com/maps/search/La+Sabicherie+Bastille" target="_blank" style="text-decoration: none;">
-                            <div style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
+
+                        <a href="https://www.google.com/maps/search/La+Sabicherie+Bastille" target="_blank"
+                            style="text-decoration: none;">
+                            <div
+                                style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
                                 <div style="font-size: 1.5rem; margin-bottom: 5px;">🥙</div>
-                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">La Sabicherie</div>
+                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">La Sabicherie
+                                </div>
                                 <div style="font-size: 0.7rem; color: #636e72;">Pita Sandwich • 4,7 ⭐</div>
-                                <div style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--pink); padding: 3px 10px; border-radius: 20px;">Voir GPS</div>
+                                <div
+                                    style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--pink); padding: 3px 10px; border-radius: 20px;">
+                                    Voir GPS</div>
                             </div>
                         </a>
-                    
-                        <a href="https://www.google.com/maps/search/Street+Bangkok+Bastille" target="_blank" style="text-decoration: none;">
-                            <div style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
+
+                        <a href="https://www.google.com/maps/search/Street+Bangkok+Bastille" target="_blank"
+                            style="text-decoration: none;">
+                            <div
+                                style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
                                 <div style="font-size: 1.5rem; margin-bottom: 5px;">🍜</div>
-                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">Street Bangkok</div>
+                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">Street Bangkok
+                                </div>
                                 <div style="font-size: 0.7rem; color: #636e72;">Thaï Street Food • 4,3 ⭐</div>
-                                <div style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--purple); padding: 3px 10px; border-radius: 20px;">Voir GPS</div>
+                                <div
+                                    style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--purple); padding: 3px 10px; border-radius: 20px;">
+                                    Voir GPS</div>
                             </div>
                         </a>
                     </div>
                 </div>
             </div>
-        
+
             <div id="etape6" class="step">
                 <span class="time">21h00</span>
                 <div class="step-content">RETOUR FINAL 🚆 <span class="badge">x5 tickets</span><br>
-                <small>RER A Gare de Lyon ➔ Poissy (26 min)</small></div>
+                    <small>RER A Gare de Lyon ➔ Poissy (26 min)</small>
+                </div>
             </div>
             <div class="step">
                 <span class="time">21h30</span>
@@ -318,17 +551,77 @@
             <h2>💰 BUDGET pour 4 PERSONNES (Antonin, Ethan, Lise, Nalya)</h2>
             <p style="font-size: 0.8rem; color: #636e72;">Part/3 calculée (Nalya invitée)</p>
             <table>
-                <tr><th>Poste</th><th>Prix Unité</th><th>Qté</th><th>Total</th><th>Part/3</th></tr>
-                <tr><td>🚗 Parking Poissy</td><td>7,00€</td><td>1</td><td>7,00€</td><td>2,33€</td></tr>
-                <tr><td>🚆 Ticket 1 (Aller)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
-                <tr><td>🚇 Ticket 2 (Triomphe)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
-                <tr><td>🚇 Ticket 3 (Eiffel)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
-                <tr><td>🚇 Ticket 4 (Lyon)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
-                <tr><td>🚆 Ticket 5 (Retour)</td><td>2,55€</td><td>4</td><td>10,20€</td><td>3,40€</td></tr>
-                <tr><td>🗼 Tour Eiffel</td><td>18,40€</td><td>4</td><td>73,60€</td><td>24,53€</td></tr>
-                <tr><td>🏛️ Arc de Triomphe</td><td>0,00€</td><td>4</td><td>0,00€</td><td>0,00€</td></tr>
-                <tr style="color: var(--purple); font-weight: 600;"><td>🍕 Resto (Estimation)</td><td>15,00€</td><td>4</td><td>60,00€</td><td>20,00€</td></tr>
-                
+                <tr>
+                    <th>Poste</th>
+                    <th>Prix Unité</th>
+                    <th>Qté</th>
+                    <th>Total</th>
+                    <th>Part/3</th>
+                </tr>
+                <tr>
+                    <td>🚗 Parking Poissy</td>
+                    <td>7,00€</td>
+                    <td>1</td>
+                    <td>7,00€</td>
+                    <td>2,33€</td>
+                </tr>
+                <tr>
+                    <td>🚆 Ticket 1 (Aller)</td>
+                    <td>2,55€</td>
+                    <td>4</td>
+                    <td>10,20€</td>
+                    <td>3,40€</td>
+                </tr>
+                <tr>
+                    <td>🚇 Ticket 2 (Triomphe)</td>
+                    <td>2,55€</td>
+                    <td>4</td>
+                    <td>10,20€</td>
+                    <td>3,40€</td>
+                </tr>
+                <tr>
+                    <td>🚇 Ticket 3 (Eiffel)</td>
+                    <td>2,55€</td>
+                    <td>4</td>
+                    <td>10,20€</td>
+                    <td>3,40€</td>
+                </tr>
+                <tr>
+                    <td>🚇 Ticket 4 (Lyon)</td>
+                    <td>2,55€</td>
+                    <td>4</td>
+                    <td>10,20€</td>
+                    <td>3,40€</td>
+                </tr>
+                <tr>
+                    <td>🚆 Ticket 5 (Retour)</td>
+                    <td>2,55€</td>
+                    <td>4</td>
+                    <td>10,20€</td>
+                    <td>3,40€</td>
+                </tr>
+                <tr>
+                    <td>🗼 Tour Eiffel</td>
+                    <td>18,40€</td>
+                    <td>4</td>
+                    <td>73,60€</td>
+                    <td>24,53€</td>
+                </tr>
+                <tr>
+                    <td>🏛️ Arc de Triomphe</td>
+                    <td>0,00€</td>
+                    <td>4</td>
+                    <td>0,00€</td>
+                    <td>0,00€</td>
+                </tr>
+                <tr style="color: var(--purple); font-weight: 600;">
+                    <td>🍕 Resto (Estimation)</td>
+                    <td>15,00€</td>
+                    <td>4</td>
+                    <td>60,00€</td>
+                    <td>20,00€</td>
+                </tr>
+
                 <tr class="total-row">
                     <td colspan="3">💰 TOTAL GÉNÉRAL</td>
                     <td>191,60€</td>
@@ -353,24 +646,24 @@
             const map = L.map('map', { layers: [satellite] }).setView([48.87, 2.30], 11);
 
             const points = [
-                {n: 1, name: "Parking Poissy", coords: [48.933918, 2.042372]},
-                {n: 2, name: "Arc de Triomphe", coords: [48.8738, 2.2950]},
-                {n: 3, name: "Tour Eiffel", coords: [48.8584, 2.2945]},
-                {n: 4, name: "Sacré-Cœur", coords: [48.8867, 2.3431]},
-                {n: 5, name: "Rue Crémieux", coords: [48.8471, 2.3708]},
-                {n: 6, name: "Retour final", coords: [48.9338, 2.0423]}
+                { n: 1, name: "Parking Poissy", coords: [48.933918, 2.042372] },
+                { n: 2, name: "Arc de Triomphe", coords: [48.8738, 2.2950] },
+                { n: 3, name: "Tour Eiffel", coords: [48.8584, 2.2945] },
+                { n: 4, name: "Sacré-Cœur", coords: [48.8867, 2.3431] },
+                { n: 5, name: "Rue Crémieux", coords: [48.8471, 2.3708] },
+                { n: 6, name: "Retour final", coords: [48.9338, 2.0423] }
             ];
 
             const traceCoords = points.map(p => p.coords);
-            L.polyline(traceCoords, {color: '#ff7eb9', weight: 4, opacity: 0.8, dashArray: '8, 12'}).addTo(map);
+            L.polyline(traceCoords, { color: '#ff7eb9', weight: 4, opacity: 0.8, dashArray: '8, 12' }).addTo(map);
 
             points.forEach(p => {
                 const customIcon = L.divIcon({ className: 'map-label', html: p.n, iconSize: [32, 32] });
-                L.marker(p.coords, {icon: customIcon}).addTo(map)
-                .bindPopup(`<b>${p.name}</b><br><a href="#etape${p.n}" class="popup-link">👉 Voir l'étape</a>`);
+                L.marker(p.coords, { icon: customIcon }).addTo(map)
+                    .bindPopup(`<b>${p.name}</b><br><a href="#etape${p.n}" class="popup-link">👉 Voir l'étape</a>`);
             });
 
-            map.fitBounds(L.polyline(traceCoords).getBounds(), {padding: [40, 40]});
+            map.fitBounds(L.polyline(traceCoords).getBounds(), { padding: [40, 40] });
         }
 
         function enlargeImg(el) {
@@ -381,4 +674,5 @@
         }
     </script>
 </body>
+
 </html>
