@@ -18,299 +18,725 @@
     <meta property="og:image" content="icon-roadbook.png">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
         :root {
-            --pink: #ff7eb9;
-            --purple: #764ba2;
-            --dark: #2d3436;
-            --white: #ffffff;
-            --gradient: linear-gradient(135deg, #ff7eb9 0%, #764ba2 100%);
+            --cream: #FBF6EE;
+            --cream-deep: #F3EADA;
+            --ink: #241832;
+            --ink-soft: #5B4E6E;
+            --pink: #FF6FA5;
+            --pink-deep: #E14E86;
+            --purple: #6B4E9E;
+            --purple-deep: #4A3373;
+            --gold: #CBA25F;
+            --gold-soft: #E7D5AE;
+            --white: #FFFFFF;
+            --line-gradient: linear-gradient(180deg, var(--pink) 0%, var(--purple) 100%);
+            --shadow-soft: 0 14px 34px rgba(74, 51, 115, 0.14);
         }
 
-        /* Protection par mot de passe */
+        * { box-sizing: border-box; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--cream);
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(203, 162, 95, 0.16) 1px, transparent 0);
+            background-size: 22px 22px;
+            color: var(--ink);
+            margin: 0;
+            padding: 0;
+            line-height: 1.55;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 { font-family: 'Fraunces', serif; }
+
+        /* ===================== LOCK SCREEN ===================== */
         #lock-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient);
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255,111,165,0.35), transparent 45%),
+                radial-gradient(circle at 80% 75%, rgba(107,78,158,0.5), transparent 50%),
+                linear-gradient(160deg, var(--purple-deep) 0%, var(--ink) 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            color: white;
-            transition: opacity 0.5s ease;
+            color: var(--cream);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #lock-screen.unlocking {
+            opacity: 0;
+            transform: scale(1.06);
+            pointer-events: none;
+        }
+
+        .seal-wrap {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin-bottom: 26px;
+        }
+
+        .seal {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, var(--pink) 0%, var(--pink-deep) 55%, #a6376a 100%);
+            box-shadow:
+                inset 0 3px 6px rgba(255,255,255,0.35),
+                inset 0 -8px 14px rgba(0,0,0,0.35),
+                0 10px 25px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 2.4rem;
+            color: rgba(255,255,255,0.92);
+            animation: sealFloat 5s ease-in-out infinite;
+        }
+
+        @keyframes sealFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+        }
+
+        .lock-eyebrow {
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            color: var(--gold-soft);
+            margin-bottom: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        #lock-screen h2 {
+            margin: 0 0 6px;
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .lock-sub {
+            color: rgba(251, 246, 238, 0.65);
+            font-size: 0.85rem;
+            margin-bottom: 26px;
+        }
+
+        .lock-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         #lock-screen input {
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            margin-top: 15px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.06);
+            color: var(--white);
             width: 200px;
             text-align: center;
             font-size: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 2px;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        #lock-screen input:focus {
+            border-color: var(--pink);
+            background: rgba(255,255,255,0.1);
+        }
+
+        #lock-screen input::placeholder {
+            color: rgba(255,255,255,0.35);
+            letter-spacing: normal;
         }
 
         #lock-screen button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 14px 22px;
+            border-radius: 12px;
             border: none;
-            background: var(--purple);
+            background: linear-gradient(135deg, var(--pink), var(--purple));
             color: white;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 20px rgba(225, 78, 134, 0.35);
+            transition: transform 0.15s ease;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: var(--dark);
-            margin: 0;
-            padding: 0;
-            line-height: 1.5;
-            scroll-behavior: smooth;
+        #lock-screen button:active { transform: scale(0.95); }
+
+        .lock-shake { animation: shake 0.4s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
         }
 
+        /* ===================== LIGHTBOX ===================== */
+        #imageModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: rgba(36, 24, 50, 0.92);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            backdrop-filter: blur(6px);
+        }
+
+        #modalImg {
+            max-width: 92%;
+            max-height: 88%;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        /* ===================== HERO / BOARDING PASS ===================== */
         .hero {
-            background: var(--gradient);
+            position: relative;
+            background:
+                radial-gradient(circle at 15% 0%, rgba(255,255,255,0.18), transparent 40%),
+                linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
             color: var(--white);
-            padding: 40px 20px;
+            padding: 46px 24px 60px;
             text-align: center;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; bottom: -1px;
+            height: 22px;
+            background-image: radial-gradient(circle at 12px 0, var(--cream) 11px, transparent 12px);
+            background-size: 24px 22px;
+            background-repeat: repeat-x;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 14px;
         }
 
         .hero h1 {
-            margin: 0;
-            font-size: 1.6rem;
-            letter-spacing: 1px;
+            margin: 0 0 10px;
+            font-size: 2.1rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
+        .hero .hero-date {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-dash {
+            margin-top: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0.85;
+        }
+
+        .hero-dash .line {
+            height: 1px;
+            width: 46px;
+            background: repeating-linear-gradient(90deg, rgba(255,255,255,0.7) 0 6px, transparent 6px 11px);
+        }
+
+        .hero-dash i { font-size: 0.75rem; color: var(--gold-soft); }
+
+        /* ===================== LAYOUT ===================== */
         .container {
-            max-width: 600px;
-            margin: -20px auto 40px;
-            padding: 0 15px;
+            max-width: 620px;
+            margin: -28px auto 50px;
+            padding: 0 16px;
         }
 
         .card {
             background: var(--white);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 22px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(203, 162, 95, 0.15);
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        h2 {
-            font-size: 1.2rem;
-            color: var(--purple);
-            border-bottom: 2px solid #f1f2f6;
-            padding-bottom: 8px;
-            margin-top: 0;
-            text-transform: uppercase;
+        .card.in-view { opacity: 1; transform: translateY(0); }
+
+        .card h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--purple-deep);
+            margin: 0 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--gold-soft);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.2px;
         }
 
-        /* Carte et Marqueurs */
+        /* ===================== MAP ===================== */
         #map {
             height: 380px;
             width: 100%;
-            border-radius: 15px;
-            margin: 15px 0;
-            border: 2px solid white;
+            border-radius: 16px;
+            margin: 4px 0 18px;
+            border: 2px solid var(--cream-deep);
             z-index: 1;
         }
 
         .map-label {
-            background: var(--pink);
+            background: linear-gradient(135deg, var(--pink), var(--purple));
             color: white;
             border-radius: 50%;
             width: 32px;
             height: 32px;
             text-align: center;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
             line-height: 32px;
             border: 2.5px solid white;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
         }
 
         .popup-link {
-            color: var(--purple);
+            color: var(--purple-deep);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 700;
             display: block;
             margin-top: 5px;
         }
 
-        /* Planning */
-        .time {
-            font-weight: 700;
-            color: var(--pink);
-            min-width: 60px;
-            display: inline-block;
-        }
-
-        .step {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: flex-start;
+        /* ===================== LINKS GRID ===================== */
+        .links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            scroll-margin-top: 30px;
         }
 
-        .step-content {
-            flex: 1;
-            font-size: 0.9rem;
+        .link-item {
+            background: var(--cream);
+            padding: 13px 12px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--ink);
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid rgba(203,162,95,0.3);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
         }
 
-        .step-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin: 10px 0;
-            border: 1px solid #eee;
-            cursor: zoom-in;
-            transition: transform 0.3s ease;
+        .link-item i { color: var(--pink-deep); font-size: 1rem; width: 18px; text-align: center; }
+
+        .link-item:hover, .link-item:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(74,51,115,0.14);
+            background: var(--white);
         }
 
-        .step-img:hover {
-            transform: scale(1.02);
+        .link-item.wallet {
+            grid-column: span 2;
+            background: linear-gradient(120deg, #fff5f9, #fff);
+            border: 1px solid var(--pink);
         }
 
-        .crop-top {
-            object-position: top;
-        }
+        .link-item.wallet i { color: var(--purple); }
 
-        .badge {
-            background: #e3f2fd;
-            color: #1976d2;
-            padding: 2px 8px;
-            border-radius: 5px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-
-        /* Checklist */
+        /* ===================== CHECKLIST (luggage tags) ===================== */
         .checklist {
             list-style: none;
             padding: 0;
-            margin: 10px 0;
+            margin: 0;
+            display: grid;
+            gap: 8px;
         }
 
         .checklist-item {
             display: flex;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #f1f2f6;
+            padding: 12px 14px;
+            background: var(--cream);
+            border-radius: 12px;
+            border: 1px dashed rgba(203,162,95,0.5);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: background 0.2s ease;
         }
+
+        .checklist-item:hover { background: var(--cream-deep); }
 
         .checklist-item input {
-            width: 18px;
-            height: 18px;
-            margin-right: 12px;
-            accent-color: var(--pink);
+            width: 19px;
+            height: 19px;
+            margin-right: 13px;
+            accent-color: var(--pink-deep);
+            flex-shrink: 0;
         }
 
-        .checklist-item input:checked+span {
+        .checklist-item input:checked + span {
             text-decoration: line-through;
-            color: #b2bec3;
+            color: #b2a7c4;
         }
 
-        /* Budget Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-            margin-top: 10px;
+        /* ===================== TIMELINE (signature: métro line) ===================== */
+        .timeline-wrap {
+            position: relative;
+            padding-left: 34px;
         }
 
-        th {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 2px solid #eee;
+        .timeline-track {
+            position: absolute;
+            left: 10px;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 3px;
+            background: rgba(107, 78, 158, 0.14);
         }
 
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
+        .timeline-fill {
+            position: absolute;
+            left: 10px;
+            top: 6px;
+            width: 3px;
+            border-radius: 3px;
+            background: var(--line-gradient);
+            height: 0%;
+            transition: height 0.15s ease-out;
         }
 
-        .total-row {
-            background: #fff5f9;
-            font-weight: 700;
-        }
-
-        /* Lightbox */
-        #imageModal {
-            display: none;
-            position: fixed;
-            z-index: 10001;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            align-items: center;
-            justify-content: center;
-            cursor: zoom-out;
-            backdrop-filter: blur(5px);
-        }
-
-        #modalImg {
-            max-width: 95%;
-            max-height: 90%;
-            border-radius: 10px;
-        }
-
-        /* Liens utiles */
-        .links-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .link-item {
-            background: #f1f2f6;
-            padding: 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: var(--dark);
-            font-size: 0.8rem;
+        .gare {
+            position: relative;
+            margin: 30px 0 18px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            border: 1px solid #ddd;
+            gap: 10px;
         }
 
-        /* Style des boutons Google Maps */
-        .btn-maps-action {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #4285F4;
-            color: white !important;
-            padding: 10px 18px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
+        .gare:first-child { margin-top: 4px; }
+
+        .gare-dot {
+            position: absolute;
+            left: -34px;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 3px solid var(--gold);
+            z-index: 2;
+        }
+
+        .gare-label {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--purple-deep);
+            background: var(--gold-soft);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        .step {
+            position: relative;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            scroll-margin-top: 30px;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .step.in-view { opacity: 1; transform: translateX(0); }
+
+        .step-dot {
+            position: absolute;
+            left: -30px;
+            top: 2px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--purple);
+            border: 2px solid var(--white);
+            box-shadow: 0 0 0 2px rgba(107,78,158,0.25);
+            z-index: 2;
+        }
+
+        .step.station .step-dot {
+            width: 16px;
+            height: 16px;
+            left: -31.5px;
+            background: var(--pink-deep);
+            box-shadow: 0 0 0 3px rgba(255,111,165,0.25);
+        }
+
+        .time {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--gold-soft);
+            background: var(--ink);
+            min-width: 58px;
+            text-align: center;
+            padding: 5px 6px;
+            border-radius: 7px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .step-content {
+            flex: 1;
+            font-size: 0.9rem;
+            padding-top: 4px;
+        }
+
+        .step-content strong { color: var(--purple-deep); }
+
+        .step-content small { color: var(--ink-soft); }
+
+        .step-img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 10px 0 8px;
+            border: 6px solid var(--white);
+            outline: 1px solid rgba(203,162,95,0.35);
+            box-shadow: 0 10px 22px rgba(74,51,115,0.16);
+            cursor: zoom-in;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform: rotate(-1.2deg);
+        }
+
+        .step:nth-of-type(even) .step-img { transform: rotate(1.2deg); }
+
+        .step-img:hover {
+            transform: rotate(0deg) scale(1.015);
+            box-shadow: 0 14px 30px rgba(74,51,115,0.22);
+        }
+
+        .crop-top { object-position: top; }
+
+        .badge {
+            background: #f3ecff;
+            color: var(--purple-deep);
+            padding: 2px 9px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Dinner spotlight */
+        .step-resto .step-content {
+            background: linear-gradient(135deg, #fff8fb, #fdf6ff);
+            border: 1px solid var(--pink);
+            border-radius: 16px;
+            padding: 14px 16px;
+        }
+
+        .resto-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .resto-card {
+            background: var(--white);
+            border: 1.5px solid var(--cream-deep);
+            padding: 14px;
+            border-radius: 16px;
+            box-shadow: 0 6px 14px rgba(74,51,115,0.08);
+            text-align: center;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .resto-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(74,51,115,0.14); }
+
+        .resto-emoji { font-size: 1.6rem; margin-bottom: 4px; }
+        .resto-name { font-weight: 700; color: var(--purple-deep); font-size: 0.88rem; font-family: 'Fraunces', serif; }
+        .resto-meta { font-size: 0.72rem; color: var(--ink-soft); margin-top: 3px; }
+        .resto-cta {
+            display: inline-block;
             margin-top: 10px;
-            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
-            transition: 0.2s;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: white;
+            background: var(--pink-deep);
+            padding: 4px 12px;
+            border-radius: 20px;
         }
 
-        .btn-maps-action:active {
-            transform: scale(0.95);
+        /* ===================== BUDGET (receipt) ===================== */
+        .receipt-sub {
+            font-size: 0.78rem;
+            color: var(--ink-soft);
+            margin: -8px 0 14px;
+        }
+
+        .receipt-table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+        }
+
+        table#budgetTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+            min-width: 500px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        #budgetTable thead th {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 2px dashed var(--gold-soft);
+            color: var(--purple-deep);
+            font-size: 0.68rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        #budgetTable tbody tr { border-bottom: 1px dashed #ece3f0; }
+
+        #budgetTable tbody td { padding: 8px; }
+
+        .label-in, .price-in, .qty-in {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .label-in {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            outline: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .price-in, .qty-in {
+            border: 1px solid var(--cream-deep);
+            padding: 6px;
+            border-radius: 8px;
+            background: var(--cream);
+        }
+
+        .price-in { width: 72px; }
+        .qty-in { width: 52px; }
+
+        .row-total { font-weight: 700; color: var(--ink); }
+        .row-part { color: var(--ink-soft); }
+
+        .add-row-btn {
+            background: var(--cream);
+            border: 1.5px dashed var(--gold);
+            padding: 11px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--purple-deep);
+            font-size: 0.85rem;
+            margin-top: 16px;
+            transition: background 0.15s ease;
+        }
+
+        .add-row-btn:hover { background: var(--cream-deep); }
+
+        .totals-strip {
+            margin-top: 18px;
+            background: linear-gradient(135deg, var(--purple-deep), var(--purple));
+            border-radius: 16px;
+            padding: 16px 18px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .totals-strip::before {
+            content: "";
+            position: absolute;
+            top: -20px; right: -20px;
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .totals-strip .label {
+            font-size: 0.7rem;
+            opacity: 0.75;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .totals-strip .value {
+            font-size: 1.35rem;
+            font-weight: 800;
+            font-family: 'Fraunces', serif;
+        }
+
+        .totals-strip .right { text-align: right; }
+        .totals-strip .right .value { color: var(--gold-soft); }
+
+        footer.foot-note {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--ink-soft);
+            padding: 10px 20px 40px;
         }
     </style>
 </head>
@@ -318,331 +744,406 @@
 <body>
 
     <div id="lock-screen">
-        <i class="fas fa-lock fa-3x"></i>
-        <h2>Accès Roadbook</h2>
-        <input type="password" id="passInput" placeholder="Mot de passe...">
-        <button onclick="checkPass()">Valider</button>
+        <div class="lock-eyebrow">Accès privé</div>
+        <div class="seal-wrap">
+            <div class="seal">N</div>
+        </div>
+        <h2>Roadbook scellé</h2>
+        <p class="lock-sub">Entre le mot de passe pour ouvrir ton carnet de voyage</p>
+        <div class="lock-form">
+            <input type="password" id="passInput" placeholder="Mot de passe" autocomplete="off">
+            <button onclick="checkPass()">Ouvrir</button>
+        </div>
     </div>
 
     <div id="imageModal" onclick="this.style.display='none'">
-        <img id="modalImg">
+        <img id="modalImg" alt="">
     </div>
 
     <div class="hero">
-        <h1>🎂 LES 18 ANS DE NALYA</h1>
-        <p>Lundi 27 Juillet 2026 | Roadbook</p>
+        <div class="hero-eyebrow">Carnet de voyage · Paris</div>
+        <h1>Les 18 ans de Nalya 🎂</h1>
+        <div class="hero-date"><i class="fas fa-calendar-day"></i> Lundi 27 Juillet 2026</div>
+        <div class="hero-dash">
+            <span class="line"></span><i class="fas fa-train"></i><span class="line"></span>
+        </div>
     </div>
 
     <div class="container">
 
         <div class="card">
-            <h2>📍 LA CARTE DU JOUR</h2>
+            <h2><i class="fas fa-map-location-dot"></i> La carte du jour</h2>
             <div id="map"></div>
 
-            <h2 style="margin-top: 20px;">🔗 LES LIENS UTILES</h2>
+            <h2 style="margin-top: 6px;"><i class="fas fa-link"></i> Les liens utiles</h2>
             <div class="links-grid">
-                <a href="https://maps.app.goo.gl/WE9JJe1fGZk18Xci7" target="_blank" class="link-item"><i
-                        class="fas fa-parking"></i>
-                    GPS Parking</a>
-                <a href="https://antoto.github.io/enigmes18ansnalya" target="_blank" class="link-item"><i
-                        class="fas fa-user-secret"></i> Les énigmes</a>
-                <a href="https://antoto.github.io/cadeau18ansnalya/Fiche%20Horaire%20Aller.pdf" target="_blank" class="link-item"><i class="fas fa-train"></i>
-                    Horaires RER A aller</a>
-                <a href="https://antoto.github.io/cadeau18ansnalya/Fiche%20Horaire%20Retour.pdf" target="_blank" class="link-item"><i class="fas fa-train"></i>
-                    Horaires RER A retour</a>
-                <a href="https://antoto.github.io/comptes18ansnalya/" target="_blank" class="link-item"
-                    style="grid-column: span 2; background: #fff5f9; border: 1px solid var(--pink);">
-                    <i class="fas fa-wallet" style="color: var(--pink);"></i> <b>COMPTES DÉPENSES 💰</b>
+                <a href="https://maps.app.goo.gl/WE9JJe1fGZk18Xci7" target="_blank" class="link-item">
+                    <i class="fas fa-parking"></i> GPS Parking</a>
+                <a href="https://antoto.github.io/enigmes18ansnalya" target="_blank" class="link-item">
+                    <i class="fas fa-user-secret"></i> Les énigmes</a>
+                <a href="https://antoto.github.io/cadeau18ansnalya/Fiche%20Horaire%20Aller.pdf" target="_blank" class="link-item">
+                    <i class="fas fa-train"></i> Horaires RER A aller</a>
+                <a href="https://antoto.github.io/cadeau18ansnalya/Fiche%20Horaire%20Retour.pdf" target="_blank" class="link-item">
+                    <i class="fas fa-train"></i> Horaires RER A retour</a>
+                <a href="https://antoto.github.io/comptes18ansnalya/" target="_blank" class="link-item wallet">
+                    <i class="fas fa-wallet"></i> <b>Comptes dépenses 💰</b>
                 </a>
             </div>
         </div>
 
         <div class="card">
-            <h2>✅ A NE PAS OUBLIER</h2>
+            <h2><i class="fas fa-suitcase-rolling"></i> À ne pas oublier</h2>
             <div class="checklist">
                 <label class="checklist-item"><input type="checkbox"> <span>💳 Cartes d'identité</span></label>
                 <label class="checklist-item"><input type="checkbox"> <span>🎟️ Billets Tour Eiffel</span></label>
-                <label class="checklist-item"><input type="checkbox"> <span>🥪 Pique-nique & Boissons</span></label>
+                <label class="checklist-item"><input type="checkbox"> <span>🥪 Pique-nique &amp; Boissons</span></label>
                 <label class="checklist-item"><input type="checkbox"> <span>🔋 Batteries externes</span></label>
+                <label class="checklist-item"><input type="checkbox"> <span>💶 Argent</span></label>
             </div>
         </div>
 
         <div class="card">
-            <h2>🕒 LE PLANNING</h2>
+            <h2><i class="fas fa-route"></i> Le planning</h2>
 
-            <p><strong>MATIN : L'arrivée & L'Arc</strong></p>
-            <div class="step">
-                <span class="time">06h45</span>
-                <div class="step-content">Départ de Rives-en-Seine (Route : 1h45)</div>
-            </div>
-            <div id="etape1" class="step">
-                <span class="time">08h30</span>
-                <div class="step-content">Parking Indigo Poissy 🅿️ (6 rue du Bac)</div>
-            </div>
-            <div class="step">
-                <span class="time">08h57</span>
-                <div class="step-content">
-                    Départ RER A 🚆 (Trajet : 28 min) <span class="badge">x5 tickets</span><br>
-                    <small>Dir. : Marne-la-Vallée / Boissy-St-Léger</small>
-                </div>
-            </div>
-            <div class="step">
-                <span class="time">09h25</span>
-                <div class="step-content">Arrivée Charles de Gaulle - Étoile</div>
-            </div>
-            <div id="etape2" class="step">
-                <span class="time">09h35</span>
-                <div class="step-content">
-                    Arc de Triomphe (Sortie 1)
-                    <img src="Arc de tromphe.jpg" class="step-img" onclick="enlargeImg(this)">
-                    <small>Gratuit avec CNI. Si trop de queue, photos en bas.</small>
-                </div>
-            </div>
+            <div class="timeline-wrap">
+                <div class="timeline-track"></div>
+                <div class="timeline-fill" id="lineFill"></div>
 
-            <p><strong>MIDI : LE GRAND BREAK (11h30 — 14h00)</strong></p>
-            <div class="step">
-                <span class="time">11h10</span>
-                <div class="step-content">Métro Ligne 6 🚇 (Dir. Nation) <span class="badge">x5 tickets</span><br>
-                    <small>Charles de Gaulle - Étoile ➔ Trocadéro (5 min)</small>
-                </div>
-            </div>
-            <div class="step">
-                <span class="time">11h20</span>
-                <div class="step-content">Shooting Photo au Trocadéro</div>
-            </div>
-            <div class="step">
-                <span class="time">12h00</span>
-                <div class="step-content">Installation au Champ-de-Mars (10 min à pied)</div>
-            </div>
-            <div id="etape3" class="step">
-                <span class="time">12h00</span>
-                <div class="step-content">
-                    <strong>Pique-nique & Chill</strong>
-                    <img src="Champs de Mars Picnic.jpg" class="step-img" onclick="enlargeImg(this)">
-                    <small>Repas, jeu de société, sieste...</small>
-                </div>
-            </div>
+                <div class="gare"><span class="gare-dot"></span><span class="gare-label">Matin · L'arrivée &amp; l'Arc</span></div>
 
-            <p><strong>APRÈS-MIDI : Ascension & Montmartre</strong></p>
-            <div class="step">
-                <span class="time">14h00</span>
-                <div class="step-content">
-                    TOUR EIFFEL 🗼 (Sommet - 18,40 €/pers)
-                    <img src="Tour Sommet.jpg" class="step-img crop-top" onclick="enlargeImg(this)">
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">06h45</span>
+                    <div class="step-content">Départ de Rives-en-Seine (Route : 1h45)</div>
                 </div>
-            </div>
-            <div class="step">
-                <span class="time">16h00</span>
-                <div class="step-content">Départ vers Montmartre 🚇 <span class="badge">x5 tickets</span><br>
-                    <small>L6 (Bir-Hakeim ➔ Étoile) puis L2 (Étoile ➔ Anvers)</small>
+                <div id="etape1" class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">08h30</span>
+                    <div class="step-content">Parking Indigo Poissy 🅿️ (6 rue du Bac)</div>
                 </div>
-            </div>
-            <div id="etape4" class="step">
-                <span class="time">16h45</span>
-                <div class="step-content">
-                    Sacré-Cœur ⛪
-                    <img src="Sacré Coeur.jpg" class="step-img" onclick="enlargeImg(this)">
-                    <small>Utilisation du funiculaire ?</small>
-                </div>
-            </div>
-            <div class="step">
-                <span class="time">17h30</span>
-                <div class="step-content">PAUSE GOÛTER MAISON (Square Louise Michel)</div>
-            </div>
-
-            <p><strong>SOIR : Couleurs, Resto & Retour</strong></p>
-
-            <div class="step">
-                <span class="time">18h00</span>
-                <div class="step-content">Liaison Rue Crémieux 🌈 <span class="badge">x5 tickets</span><br>
-                    <small>L2 (Anvers ➔ Nation) puis RER A (Gare de Lyon)</small>
-                </div>
-            </div>
-
-            <div id="etape5" class="step">
-                <span class="time">18h30</span>
-                <div class="step-content">
-                    Photos dans la rue colorée
-                    <img src="Rue Crémieux.jpg" class="step-img" onclick="enlargeImg(this)">
-                </div>
-            </div>
-
-            <div id="etape-resto" class="step" style="border-left: 3px solid var(--pink); padding-left: 10px;">
-                <span class="time">19h15</span>
-                <div class="step-content">
-                    <strong>DÎNER (Gare de Lyon / Bastille) 🍕</strong><br>
-                    <small>Nos pépites trouvées pour finir la journée :</small><br>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
-                        <a href="https://maps.app.goo.gl/TJyvJ1Jn9WDUpQE58" target="_blank"
-                            style="text-decoration: none;">
-                            <div
-                                style="background: #fff; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); text-align: center;">
-                                <div style="font-size: 1.5rem; margin-bottom: 5px;">🍔</div>
-                                <div style="font-weight: 700; color: var(--purple); font-size: 0.85rem;">Mangez et
-                                    cassez-vous</div>
-                                <div style="font-size: 0.7rem; color: #636e72;">Burger • 4,4 ⭐ (1-10€)</div>
-                                <div
-                                    style="display: inline-block; margin-top: 8px; font-size: 0.7rem; color: white; background: var(--pink); padding: 3px 10px; border-radius: 20px;">
-                                    Plus d'Infos</div>
-                            </div>
-                        </a>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">08h57</span>
+                    <div class="step-content">
+                        Départ RER A 🚆 (Trajet : 28 min) <span class="badge">x4 tickets</span><br>
+                        <small>Dir. : Marne-la-Vallée / Boissy-St-Léger</small>
                     </div>
                 </div>
-            </div>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">09h25</span>
+                    <div class="step-content">Arrivée Charles de Gaulle - Étoile</div>
+                </div>
+                <div id="etape2" class="step station">
+                    <span class="step-dot"></span>
+                    <span class="time">09h35</span>
+                    <div class="step-content">
+                        Arc de Triomphe (Sortie 1)
+                        <img src="Arc de tromphe.jpg" class="step-img" onclick="enlargeImg(this)" alt="Arc de Triomphe">
+                        <small>Gratuit avec CNI. Si trop de queue, photos en bas.</small>
+                    </div>
+                </div>
 
-            <div id="etape6" class="step">
-                <span class="time">21h00</span>
-                <div class="step-content">RETOUR FINAL 🚆 <span class="badge">x5 tickets</span><br>
-                    <small>RER A Gare de Lyon ➔ Poissy (26 min)</small>
+                <div class="gare"><span class="gare-dot"></span><span class="gare-label">Midi · Le grand break</span></div>
+
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">11h10</span>
+                    <div class="step-content">Métro Ligne 6 🚇 (Dir. Nation) <span class="badge">x4 tickets</span><br>
+                        <small>Charles de Gaulle - Étoile ➔ Trocadéro (5 min)</small>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">11h20</span>
+                    <div class="step-content">Shooting Photo au Trocadéro</div>
+                </div>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">12h00</span>
+                    <div class="step-content">Installation au Champ-de-Mars (10 min à pied)</div>
+                </div>
+                <div id="etape3" class="step station">
+                    <span class="step-dot"></span>
+                    <span class="time">12h00</span>
+                    <div class="step-content">
+                        <strong>Pique-nique &amp; Chill</strong>
+                        <img src="Champs de Mars Picnic.jpg" class="step-img" onclick="enlargeImg(this)" alt="Champ de Mars">
+                        <small>Repas, jeu de société, sieste...</small>
+                    </div>
+                </div>
+
+                <div class="gare"><span class="gare-dot"></span><span class="gare-label">Après-midi · Ascension &amp; Montmartre</span></div>
+
+                <div class="step station">
+                    <span class="step-dot"></span>
+                    <span class="time">14h00</span>
+                    <div class="step-content">
+                        TOUR EIFFEL 🗼 (Sommet - 18,40 €/pers)
+                        <img src="Tour Sommet.jpg" class="step-img crop-top" onclick="enlargeImg(this)" alt="Sommet Tour Eiffel">
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">16h00</span>
+                    <div class="step-content">Départ vers Montmartre 🚇 <span class="badge">x4 tickets</span><br>
+                        <small>L6 (Bir-Hakeim ➔ Étoile) puis L2 (Étoile ➔ Anvers)</small>
+                    </div>
+                </div>
+                <div id="etape4" class="step station">
+                    <span class="step-dot"></span>
+                    <span class="time">16h45</span>
+                    <div class="step-content">
+                        Sacré-Cœur ⛪
+                        <img src="Sacré Coeur.jpg" class="step-img" onclick="enlargeImg(this)" alt="Sacré-Cœur">
+                        <small>Utilisation du funiculaire ?</small>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">17h30</span>
+                    <div class="step-content">Pause goûter maison (Square Louise Michel)</div>
+                </div>
+
+                <div class="gare"><span class="gare-dot"></span><span class="gare-label">Soir · Couleurs, resto &amp; retour</span></div>
+
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">18h00</span>
+                    <div class="step-content">Liaison Rue Crémieux 🌈 <span class="badge">x4 tickets</span><br>
+                        <small>L2 (Anvers ➔ Nation) puis RER A (Gare de Lyon)</small>
+                    </div>
+                </div>
+                <div id="etape5" class="step station">
+                    <span class="step-dot"></span>
+                    <span class="time">18h30</span>
+                    <div class="step-content">
+                        Photos dans la rue colorée
+                        <img src="Rue Crémieux.jpg" class="step-img" onclick="enlargeImg(this)" alt="Rue Crémieux">
+                    </div>
+                </div>
+
+                <div id="etape-resto" class="step step-resto">
+                    <span class="step-dot"></span>
+                    <span class="time">19h15</span>
+                    <div class="step-content">
+                        <strong>Dîner (Gare de Lyon / Bastille) 🍕</strong><br>
+                        <small>Nos pépites trouvées pour finir la journée :</small>
+                        <div class="resto-grid">
+                            <a href="https://maps.app.goo.gl/TJyvJ1Jn9WDUpQE58" target="_blank" style="text-decoration:none;">
+                                <div class="resto-card">
+                                    <div class="resto-emoji">🍔</div>
+                                    <div class="resto-name">Mangez et cassez-vous</div>
+                                    <div class="resto-meta">Burger • 4,4 ⭐ (1-10€)</div>
+                                    <div class="resto-cta">Plus d'infos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="etape6" class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">21h00</span>
+                    <div class="step-content">Retour final 🚆 <span class="badge">x4 tickets</span><br>
+                        <small>RER A Gare de Lyon ➔ Poissy (26 min)</small>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">21h30</span>
+                    <div class="step-content">Récupération voiture 🚗</div>
+                </div>
+                <div class="step">
+                    <span class="step-dot"></span>
+                    <span class="time">23h20</span>
+                    <div class="step-content">Arrivée à Rives-en-Seine 🏠</div>
                 </div>
             </div>
-            <div class="step">
-                <span class="time">21h30</span>
-                <div class="step-content">Récupération voiture 🚗</div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-receipt"></i> Budget interactif</h2>
+            <p class="receipt-sub">Part/3 calculée (Nalya invitée) • Modifiez, ajoutez ou supprimez des lignes.</p>
+
+            <div class="receipt-table-wrap">
+                <table id="budgetTable">
+                    <thead>
+                        <tr>
+                            <th>Poste</th>
+                            <th>Prix unité</th>
+                            <th>Qté</th>
+                            <th>Total</th>
+                            <th>Part/3</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="budgetBody"></tbody>
+                </table>
             </div>
-            <div class="step">
-                <span class="time">23h20</span>
-                <div class="step-content">Arrivée à Rives-en-Seine 🏠</div>
+
+            <button class="add-row-btn" onclick="addRow()">+ Ajouter une ligne</button>
+
+            <div class="totals-strip">
+                <div>
+                    <div class="label">Total général</div>
+                    <div class="value" id="grandTotal">0.00€</div>
+                </div>
+                <div class="right">
+                    <div class="label">Part par personne (x3)</div>
+                    <div class="value" id="partTotal">0.00€</div>
+                </div>
             </div>
         </div>
 
-        <div class="card"
-    style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); font-family: sans-serif;">
-    <h2 style="margin-top: 0; color: #2d3436;">💰 BUDGET INTERACTIF</h2>
-    <p style="font-size: 0.8rem; color: #636e72; margin-bottom: 15px;">Part/3 calculée (Nalya invitée) •
-        Modifiez, ajoutez ou supprimez des lignes.</p>
-
-    <div style="overflow-x: auto;">
-        <table id="budgetTable" style="width: 100%; border-collapse: collapse; min-width: 500px;">
-            <thead>
-                <tr style="text-align: left; border-bottom: 2px solid #eee; color: #b2bec3; font-size: 0.8rem;">
-                    <th style="padding: 10px;">POSTE</th>
-                    <th style="padding: 10px;">PRIX UNITÉ</th>
-                    <th style="padding: 10px;">QTÉ</th>
-                    <th style="padding: 10px;">TOTAL</th>
-                    <th style="padding: 10px;">PART/3</th>
-                    <th style="padding: 10px;"></th>
-                </tr>
-            </thead>
-            <tbody id="budgetBody">
-            </tbody>
-        </table>
+        <footer class="foot-note">🎈 Bon anniversaire Nalya — profite bien de ta journée 🎈</footer>
     </div>
 
-    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-        <button onclick="addRow()"
-            style="background: #f1f2f6; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: 600; color: #2d3436;">+
-            Ajouter une ligne</button>
-    </div>
-
-    <div
-        style="margin-top: 20px; background: #6c5ce7; border-radius: 15px; padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <div style="font-size: 0.8rem; opacity: 0.8;">TOTAL GÉNÉRAL</div>
-            <div id="grandTotal" style="font-size: 1.4rem; font-weight: bold;">0.00€</div>
-        </div>
-        <div style="text-align: right;">
-            <div style="font-size: 0.8rem; opacity: 0.8;">PART PAR PERSONNE (x3)</div>
-            <div id="partTotal" style="font-size: 1.4rem; font-weight: bold; color: #fab1a0;">0.00€</div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Données initiales conservées exactement comme demandé
-    const initialData = [
-        ["🚗 Parking Poissy", 7.00, 1],
-        ["🚆 Ticket 1 (Aller)", 2.55, 4],
-        ["🚇 Ticket 2 (Triomphe)", 2.55, 4],
-        ["🚇 Ticket 3 (Eiffel)", 2.55, 4],
-        ["🚇 Ticket 4 (Lyon)", 2.55, 4],
-        ["🚆 Ticket 5 (Retour)", 2.55, 4],
-        ["🗼 Tour Eiffel", 18.40, 4],
-        ["🏛️ Arc de Triomphe", 0.00, 4],
-        ["🍕 Resto (Estimation)", 15.00, 4]
-    ];
-
-    window.addRow = function(label = "", price = 0, qty = 1) {
-        const tbody = document.getElementById("budgetBody");
-        const tr = document.createElement("tr");
-        tr.style.borderBottom = "1px solid #f1f2f6";
-
-        tr.innerHTML = `
-            <td style="padding: 5px;"><input type="text" value="${label}" class="label-in" style="width:100%; border:none; padding:8px; outline:none;"></td>
-            <td style="padding: 5px;"><input type="number" value="${price}" class="price-in" step="0.05" style="width:70px; border:1px solid #eee; padding:5px; border-radius:5px;"></td>
-            <td style="padding: 5px;"><input type="number" value="${qty}" class="qty-in" style="width:50px; border:1px solid #eee; padding:5px; border-radius:5px;"></td>
-            <td class="row-total" style="padding: 10px; font-weight: 600; color: #2d3436;">0.00€</td>
-            <td class="row-part" style="padding: 10px; color: #636e72;">0.00€</td>
-            <td style="padding: 5px;"><button onclick="this.parentElement.parentElement.remove(); window.updateCalculations();" style="background:none; border:none; color:#ff7675; cursor:pointer; font-size:1.2rem;">&times;</button></td>
-        `;
-
-        tbody.appendChild(tr);
-        tr.querySelectorAll("input").forEach(i => i.addEventListener("input", window.updateCalculations));
-        window.updateCalculations();
-    };
-
-    window.updateCalculations = function() {
-        let totalGlobal = 0;
-        document.querySelectorAll("#budgetBody tr").forEach(row => {
-            const p = parseFloat(row.querySelector(".price-in").value) || 0;
-            const q = parseInt(row.querySelector(".qty-in").value) || 0;
-            const totalLine = p * q;
-            const partLine = totalLine / 3;
-
-            row.querySelector(".row-total").innerText = totalLine.toFixed(2) + "€";
-            row.querySelector(".row-part").innerText = partLine.toFixed(2) + "€";
-            totalGlobal += totalLine;
-        });
-
-        document.getElementById("grandTotal").innerText = totalGlobal.toFixed(2) + "€";
-        document.getElementById("partTotal").innerText = (totalGlobal / 3).toFixed(2) + "€";
-    };
-
-    // Chargement automatique des données au démarrage
-    document.addEventListener("DOMContentLoaded", () => {
-        initialData.forEach(d => window.addRow(d[0], d[1], d[2]));
-    });
-</script>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    function checkPass() {
-        // Le mot de passe NALYA18 est maintenu ici
-        if (document.getElementById('passInput').value.toUpperCase() === "NALYA18") {
-            document.getElementById('lock-screen').style.opacity = "0";
-            setTimeout(() => { document.getElementById('lock-screen').style.display = "none"; initMap(); }, 500);
-        } else { alert("Code incorrect !"); }
-    }
-
-    function initMap() {
-        const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-        const map = L.map('map', { layers: [satellite] }).setView([48.87, 2.30], 11);
-
-        const points = [
-            { n: 1, name: "Parking Poissy", coords: [48.933918, 2.042372] },
-            { n: 2, name: "Arc de Triomphe", coords: [48.8738, 2.2950] },
-            { n: 3, name: "Tour Eiffel", coords: [48.8584, 2.2945] },
-            { n: 4, name: "Sacré-Cœur", coords: [48.8867, 2.3431] },
-            { n: 5, name: "Rue Crémieux", coords: [48.8471, 2.3708] },
-            { n: 6, name: "Retour final", coords: [48.9338, 2.0423] }
+    <script>
+        const initialData = [
+            ["🚗 Parking Poissy", 7.00, 1],
+            ["🚆 Ticket 1 (Aller)", 2.55, 4],
+            ["🚇 Ticket 2 (Triomphe)", 2.55, 4],
+            ["🚇 Ticket 3 (Eiffel)", 2.55, 4],
+            ["🚇 Ticket 4 (Lyon)", 2.55, 4],
+            ["🚆 Ticket 5 (Retour)", 2.55, 4],
+            ["🗼 Tour Eiffel", 18.40, 4],
+            ["🏛️ Arc de Triomphe", 0.00, 4],
+            ["🍕 Resto (Estimation)", 15.00, 4]
         ];
 
-        const traceCoords = points.map(p => p.coords);
-        L.polyline(traceCoords, { color: '#ff7eb9', weight: 4, opacity: 0.8, dashArray: '8, 12' }).addTo(map);
+        window.addRow = function(label = "", price = 0, qty = 1) {
+            const tbody = document.getElementById("budgetBody");
+            const tr = document.createElement("tr");
 
-        points.forEach(p => {
-            const customIcon = L.divIcon({ className: 'map-label', html: p.n, iconSize: [32, 32] });
-            L.marker(p.coords, { icon: customIcon }).addTo(map)
-                .bindPopup(`<b>${p.name}</b><br><a href="#etape${p.n}" class="popup-link">👉 Voir l'étape</a>`);
+            tr.innerHTML = `
+                <td><input type="text" value="${label}" class="label-in"></td>
+                <td><input type="number" value="${price}" class="price-in" step="0.05"></td>
+                <td><input type="number" value="${qty}" class="qty-in"></td>
+                <td class="row-total">0.00€</td>
+                <td class="row-part">0.00€</td>
+                <td><button onclick="this.parentElement.parentElement.remove(); window.updateCalculations();" style="background:none; border:none; color:#E14E86; cursor:pointer; font-size:1.2rem;">&times;</button></td>
+            `;
+
+            tbody.appendChild(tr);
+            tr.querySelectorAll("input").forEach(i => i.addEventListener("input", window.updateCalculations));
+            window.updateCalculations();
+        };
+
+        window.updateCalculations = function() {
+            let totalGlobal = 0;
+            document.querySelectorAll("#budgetBody tr").forEach(row => {
+                const p = parseFloat(row.querySelector(".price-in").value) || 0;
+                const q = parseInt(row.querySelector(".qty-in").value) || 0;
+                const totalLine = p * q;
+                const partLine = totalLine / 3;
+
+                row.querySelector(".row-total").innerText = totalLine.toFixed(2) + "€";
+                row.querySelector(".row-part").innerText = partLine.toFixed(2) + "€";
+                totalGlobal += totalLine;
+            });
+
+            document.getElementById("grandTotal").innerText = totalGlobal.toFixed(2) + "€";
+            document.getElementById("partTotal").innerText = (totalGlobal / 3).toFixed(2) + "€";
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initialData.forEach(d => window.addRow(d[0], d[1], d[2]));
+        });
+    </script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function checkPass() {
+            const input = document.getElementById('passInput');
+            if (input.value.toUpperCase() === "NALYA18") {
+                const lock = document.getElementById('lock-screen');
+                lock.classList.add('unlocking');
+                setTimeout(() => {
+                    lock.style.display = "none";
+                    initMap();
+                    initScrollReveal();
+                }, 650);
+            } else {
+                input.parentElement.classList.add('lock-shake');
+                setTimeout(() => input.parentElement.classList.remove('lock-shake'), 400);
+            }
+        }
+
+        document.getElementById('passInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') checkPass();
         });
 
-        map.fitBounds(L.polyline(traceCoords).getBounds(), { padding: [40, 40] });
-    }
+        function initMap() {
+            const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+            const map = L.map('map', { layers: [satellite] }).setView([48.87, 2.30], 11);
 
-    function enlargeImg(el) {
-        const modal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImg');
-        modal.style.display = "flex";
-        modalImg.src = el.src;
-    }
-</script>
+            const points = [
+                { n: 1, name: "Parking Poissy", coords: [48.933918, 2.042372] },
+                { n: 2, name: "Arc de Triomphe", coords: [48.8738, 2.2950] },
+                { n: 3, name: "Tour Eiffel", coords: [48.8584, 2.2945] },
+                { n: 4, name: "Sacré-Cœur", coords: [48.8867, 2.3431] },
+                { n: 5, name: "Rue Crémieux", coords: [48.8471, 2.3708] },
+                { n: 6, name: "Retour final", coords: [48.9338, 2.0423] }
+            ];
+
+            const traceCoords = points.map(p => p.coords);
+            L.polyline(traceCoords, { color: '#E14E86', weight: 4, opacity: 0.85, dashArray: '8, 12' }).addTo(map);
+
+            points.forEach(p => {
+                const customIcon = L.divIcon({ className: 'map-label', html: p.n, iconSize: [32, 32] });
+                L.marker(p.coords, { icon: customIcon }).addTo(map)
+                    .bindPopup(`<b>${p.name}</b><br><a href="#etape${p.n}" class="popup-link">👉 Voir l'étape</a>`);
+            });
+
+            map.fitBounds(L.polyline(traceCoords).getBounds(), { padding: [40, 40] });
+        }
+
+        function enlargeImg(el) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modal.style.display = "flex";
+            modalImg.src = el.src;
+        }
+
+        function initScrollReveal() {
+            const cards = document.querySelectorAll('.card, .step');
+
+            if (reduceMotion) {
+                cards.forEach(el => el.classList.add('in-view'));
+            } else {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+                cards.forEach(el => observer.observe(el));
+            }
+
+            const wrap = document.querySelector('.timeline-wrap');
+            const fill = document.getElementById('lineFill');
+            if (wrap && fill) {
+                const updateFill = () => {
+                    const rect = wrap.getBoundingClientRect();
+                    const vh = window.innerHeight || document.documentElement.clientHeight;
+                    const total = rect.height;
+                    let progressed = (vh * 0.75) - rect.top;
+                    progressed = Math.max(0, Math.min(progressed, total));
+                    const pct = total > 0 ? (progressed / total) * 100 : 0;
+                    fill.style.height = pct + '%';
+                };
+                updateFill();
+                window.addEventListener('scroll', updateFill, { passive: true });
+                window.addEventListener('resize', updateFill);
+            }
+        }
+    </script>
+</body>
+
+</html>
